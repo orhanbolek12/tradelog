@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
         SUM(CASE WHEN t.status = 'Closed' THEN t.pnl ELSE 0 END) as total_pnl,
         SUM(CASE WHEN t.status = 'Closed' THEN 1 ELSE 0 END) as closed_trades,
         SUM(CASE WHEN t.status = 'Closed' AND t.rr_ratio IS NOT NULL 
-            THEN t.rr_ratio * COALESCE(t.risk_amount_r, 1)
+            THEN t.rr_ratio * (CASE WHEN t.is_risk_unit_mode = 1 THEN COALESCE(t.risk_amount_r, 1) ELSE 1 END)
             ELSE 0 END) as total_r
       FROM profiles p
       LEFT JOIN trades t ON t.profile_id = p.id
