@@ -273,7 +273,7 @@ function renderProfiles(profiles) {
           <div><div class="profile-stat-value">${p.total_trades || 0}</div><div class="profile-stat-label">Trades</div></div>
           <div><div class="profile-stat-value">${wr}%</div><div class="profile-stat-label">Win Rate</div></div>
           <div><div class="profile-stat-value ${pnlCls}">$${fmt(p.total_pnl || 0)}</div><div class="profile-stat-label">P&L</div></div>
-          ${(p.total_r != null && p.total_r !== 0) ? `<div><div class="profile-stat-value" style="color:${p.total_r >= 0 ? 'var(--gold)' : 'var(--danger)'};">${p.total_r >= 0 ? '+' : ''}${fmt(p.total_r, 2)}R</div><div class="profile-stat-label">Total R</div></div>` : ''}
+          ${(p.total_r != null && p.total_r !== 0) ? `<div><div class="profile-stat-value" style="color:${p.total_r >= 0 ? 'var(--success)' : 'var(--danger)'};">${p.total_r >= 0 ? '+' : ''}${fmt(p.total_r, 2)}R</div><div class="profile-stat-label">Total R</div></div>` : ''}
         </div>
       </div>`;
   });
