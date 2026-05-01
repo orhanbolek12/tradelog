@@ -525,10 +525,11 @@ function renderTradesTable(trades) {
   }
   $('empty-trades').style.display = 'none';
   tbody.innerHTML = trades.map(t => `
-    <tr>
+    <tr ${t.notes ? `onclick="toggleNotes(${t.id})" style="cursor:pointer" title="Click to show/hide notes"` : ''}>
       <td class="symbol-cell">
         ${t.symbol}
-        ${t.tradingview_url ? `<a href="${t.tradingview_url}" target="_blank" title="View Chart" style="color:var(--text-muted);font-size:10px;margin-left:4px;text-decoration:none">🔗</a>` : ''}
+        ${t.notes ? '<span style="font-size:10px;margin-left:4px;" title="Has Notes">📝</span>' : ''}
+        ${t.tradingview_url ? `<a href="${t.tradingview_url}" target="_blank" title="View Chart" style="color:var(--text-muted);font-size:10px;margin-left:4px;text-decoration:none" onclick="event.stopPropagation()">🔗</a>` : ''}
       </td>
       <td><span class="tag tag-${t.direction.toLowerCase()}">${t.direction}</span></td>
       <td>${t.market}</td>
@@ -545,19 +546,30 @@ function renderTradesTable(trades) {
       <td>${qualityDots(t.setup_quality)}</td>
       <td>
         <div class="trade-actions" style="${owner ? '' : 'display:none'}">
-          <button class="trade-action-btn" onclick="editTrade(${t.id})" title="Edit">✎</button>
-          <button class="trade-action-btn delete" onclick="deleteTrade(${t.id},'${t.symbol}')" title="Delete">✕</button>
+          <button class="trade-action-btn" onclick="event.stopPropagation();editTrade(${t.id})" title="Edit">✎</button>
+          <button class="trade-action-btn delete" onclick="event.stopPropagation();deleteTrade(${t.id},'${t.symbol}')" title="Delete">✕</button>
         </div>
       </td>
     </tr>
     ${t.notes ? `
-    <tr class="trade-notes-row" style="background: rgba(255,255,255,0.02);">
-      <td colspan="15" style="padding: 8px 16px; font-size: 0.85rem; color: var(--text-secondary); border-top: none; border-bottom: 1px solid var(--border-color); white-space: pre-wrap;">
-        <strong style="color:var(--text-muted)">Notes:</strong> ${t.notes.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+    <tr id="notes-${t.id}" class="trade-notes-row" style="display:none; background: rgba(255,255,255,0.02);">
+      <td colspan="15" style="padding: 12px 24px; font-size: 0.85rem; color: var(--text-secondary); border-top: none; border-bottom: 1px solid var(--border-color); white-space: pre-wrap; line-height: 1.5;">
+        <div style="padding-left: 20px; border-left: 2px solid var(--accent); opacity: 0.9;">
+          <strong style="color:var(--text-muted); display: block; margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Trade Notes:</strong>
+          ${t.notes.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+        </div>
       </td>
     </tr>
     ` : ''}
   `).join('');
+}
+
+function toggleNotes(id) {
+  const row = document.getElementById(`notes-${id}`);
+  if (row) {
+    const isHidden = row.style.display === 'none';
+    row.style.display = isHidden ? 'table-row' : 'none';
+  }
 }
 
 function filterTrades(status, btn) {
