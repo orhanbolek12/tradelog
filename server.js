@@ -21,7 +21,7 @@ app.use('/api/trades', tradeRoutes);
 app.use('/api/lookup', lookupRoutes);
 
 // SPA fallback
-app.get('{*path}', (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
