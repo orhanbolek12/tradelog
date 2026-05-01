@@ -539,6 +539,13 @@ function renderTradesTable(trades) {
         </div>
       </td>
     </tr>
+    ${t.notes ? `
+    <tr class="trade-notes-row" style="background: rgba(255,255,255,0.02);">
+      <td colspan="15" style="padding: 8px 16px; font-size: 0.85rem; color: var(--text-secondary); border-top: none; border-bottom: 1px solid var(--border-color); white-space: pre-wrap;">
+        <strong style="color:var(--text-muted)">Notes:</strong> ${t.notes.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+      </td>
+    </tr>
+    ` : ''}
   `).join('');
 }
 
