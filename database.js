@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
@@ -15,6 +14,8 @@ if (usePostgres) {
     ssl: { rejectUnauthorized: false }
   });
 } else {
+  // Use eval to hide this require from Vercel's static analyzer
+  const Database = eval("require('better-sqlite3')");
   const DB_PATH = path.join(__dirname, 'data', 'tradelog.db');
   if (!fs.existsSync(path.join(__dirname, 'data'))) {
     fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
