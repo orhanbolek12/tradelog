@@ -245,15 +245,25 @@ async function loadProfiles() {
 function renderProfiles(profiles) {
   const grid = $('profiles-grid');
   const isAdmin = currentUser && currentUser.isAdmin;
+  // Orhan her zaman başta
+  profiles = [...profiles].sort((a, b) => {
+    if (a.name === 'Orhan') return -1;
+    if (b.name === 'Orhan') return 1;
+    return 0;
+  });
   let html = '';
   profiles.forEach(p => {
     const wr = p.closed_trades > 0 ? ((p.winning_trades / p.closed_trades) * 100).toFixed(0) : '0';
     const pnlCls = (p.total_pnl || 0) >= 0 ? 'pnl-positive' : 'pnl-negative';
     const canDelete = isAdmin || isOwner(p.id);
+    const isKing = p.name === 'Orhan';
     html += `
       <div class="card profile-card" onclick="openDashboard(${p.id})">
         ${canDelete ? `<button class="profile-delete-btn" onclick="event.stopPropagation();deleteProfile(${p.id},'${p.name.replace(/'/g, "\\'")}')" title="Delete">✕</button>` : ''}
-        <div class="profile-avatar" style="background:linear-gradient(135deg,${p.color},${p.color}dd)">${p.avatar_initials || '?'}</div>
+        <div style="position:relative;display:inline-block;">
+          ${isKing ? `<div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:18px;line-height:1;filter:drop-shadow(0 0 6px gold);">👑</div>` : ''}
+          <div class="profile-avatar" style="background:linear-gradient(135deg,${p.color},${p.color}dd)">${p.avatar_initials || '?'}</div>
+        </div>
         <div class="profile-name">${p.name}</div>
         <div class="profile-meta">
           ${p.bio || p.default_market + ' Trader'} • ${fmtDate(p.created_at)}
